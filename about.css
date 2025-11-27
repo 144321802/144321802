@@ -1,0 +1,97 @@
+/* ------------------------------
+   FADE-IN ANIMATION ON LOAD
+------------------------------ */
+
+.about-main,
+.about-main > * {
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ------------------------------
+   ABOUT PAGE CONTENT
+------------------------------ */
+
+.about-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  
+    min-height: 100vh;
+    padding: 2rem 4rem;
+    box-sizing: border-box;
+  
+    /* remove transform; use a left gutter to clear the fixed nav */
+    transform: none;
+    margin-left: var(--left-gutter);
+  
+    /* keep max-width so content doesn't run full width */
+    max-width: calc(100% - var(--left-gutter) - 4rem);
+  
+    font-size: 0.9rem;    /* adjust scale so it's legible — tweak if you want */
+    line-height: 1.4;
+    margin-top: -15vh; /* move up 5% of viewport height */
+  } 
+
+.about-main img {
+  max-width: 170px;
+  height: auto;
+  margin-bottom: 1.3rem;
+}
+
+.about-main h2 {
+  font-size: 0.5rem;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 1.3rem;
+}
+
+.about-main p {
+  font-size: 0.45rem;
+  font-family: 'Azeret Mono', monospace;
+  line-height: 1.0;
+  margin-bottom: 0.000001rem;
+}
+
+/* Links list */
+.about-links {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.about-links li {
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.about-links a {
+  color: inherit;
+  text-decoration: none;
+  font-family: 'Azeret Mono', monospace;
+  font-size: 0.5rem;
+}
+
+
+/* ------------------------------
+   RESPONSIVE
+------------------------------ */
+
+@media (max-width: 600px) {
+  .about-main {
+    padding: 0.5rem 1rem;
+    transform: translate(20%, -10%);
+    font-size: 0.45rem;
+  }
+
+  .about-main p {
+    line-height: 1.3;
+  }
+}

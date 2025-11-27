@@ -1,0 +1,452 @@
+/* --- Layout --- */
+.music-layout {
+  display: flex;
+  height: 100vh;
+  color: #000000;
+  overflow: auto;     /* ENABLE SCROLLING */
+}
+
+/* --- Sidebar --- */
+.release-list {
+  width: 200px;
+  background: #ffffff;
+  padding: 7rem 10rem;
+  font-family: 'Roboto Mono', monospace;
+  overflow-y: auto;  /* if sidebar ever gets long */
+  z-index: 2; /* ensure sidebar is above background */
+}
+
+.release-list ul {
+  font-size: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.release-list li {
+  position: relative; /* needed for positioning the pseudo-element */
+  padding: 0.75rem 1rem 0.75rem 2rem; /* add space on the left for the square */
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s, transform 0.3s;
+}
+
+.release-list li::before {
+  content: "";
+  position: absolute;
+  left: 1rem; /* position square inside padding */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background: transparent; /* invisible by default */
+  transition: background 0.3s;
+}
+
+.release-list li:hover::before {
+  background: #000; /* black square appears on hover */
+}
+
+.release-list li:hover {
+  background: #ffffff;
+  transform: translateX(5px);
+  color: #000000;
+}
+
+.release-list li.active {
+  background: none;
+  color: #000000;
+}
+
+.release-list li.active::before {
+  background: #000000; /* black square stays visible for active item */
+}
+
+/* --- Release display --- */
+.release-display {
+  flex: 1;
+  padding: 4rem;
+  padding-top: 100px;
+  padding-left: 0px; /* adjust for fixed sidebar width */
+  overflow: auto;       /* allows its own scrolling container */
+}
+
+.release-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  max-width: 900px;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 2.5s ease;
+}
+
+.release-content img {
+  width: 400px;       /* keep fixed width */
+  height: 400px;      /* fix height too, so all images occupy same space */
+  object-fit: cover;  /* ensures image scales without stretching */
+}
+
+.release-info h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.release-info p {
+  color: #000000;
+  margin-bottom: 1rem;
+}
+
+.track.selected {
+  color: #727272; /* grey text for selected track */
+}
+
+.tracklist{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.55rem;   /* change size here */
+  line-height: 1;     /* spacing */
+  color: #000000;
+  position: relative;
+}
+
+.tracklist .track {
+  position: relative;
+  padding: 4px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-block;      /* ← THIS IS THE FIX */
+  width: fit-content;                /* ← prevents stretching */
+  transition: color 0.3s ease;
+}
+
+.tracklistLabel{
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.55rem;
+  color: #000000;
+  letter-spacing: 1px;
+}
+
+#releaseTitle {
+  font-family: "Arial", monospace;
+  font-size: 0.7rem;
+  font-weight: 200;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+  color: #000000;
+  margin-bottom: 0rem;
+}
+
+#releaseYear {
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.55rem;
+  color: #000000;
+  margin-bottom: 0rem;
+  letter-spacing: 1px;
+}
+
+#releaseLabel {
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.55rem;
+  color: #000000;
+  margin-bottom: 1.3rem;
+  letter-spacing: 1px;
+}
+
+.hover-bar {
+  position: absolute;
+  left: 0;
+  width: auto;
+  height: 22px;           /* match your track height */
+  background: #e5e5e5;
+  z-index: 0;
+  opacity: 0;
+  transition: 
+    top 0.25s ease,
+    width 0.25s ease,      /* ← smooth width animation */
+    opacity 0.25s ease;
+}
+
+.track.playing {
+  color: #727272; /* grey text for currently playing track */
+}
+
+audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.track.playing::after {
+  content: "";
+  display: inline-block;
+  margin-left: 6px;
+  width: 0.8em;
+  height: 0.8em;
+  border: 2px solid black;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+:root {
+  --btn-size: 10px;          /* change this to resize button */
+  --play-triangle-width: calc(var(--btn-size) * 0.6);
+  --play-triangle-height: calc(var(--btn-size) * 0.5);
+  --pause-bar-width: calc(var(--btn-size) * 0.2);
+  --pause-bar-height: calc(var(--btn-size) * 0.75);
+  --pause-bar-spacing: calc(var(--btn-size) * 0.15);
+}
+
+#playPauseBtn {
+  width: var(--btn-size);
+  height: var(--btn-size);
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  padding: 0;
+  overflow: visible;
+}
+
+/* --- Play symbol --- */
+#playPauseBtn.play::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-left: var(--play-triangle-width) solid black;
+  border-top: calc(var(--play-triangle-height)) solid transparent;
+  border-bottom: calc(var(--play-triangle-height)) solid transparent;
+}
+
+/* --- Pause symbol --- */
+#playPauseBtn.pause::before,
+#playPauseBtn.pause::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: var(--pause-bar-width);
+  height: var(--pause-bar-height);
+  background: black;
+  border-radius: 1px;
+}
+
+#playPauseBtn.pause::before {
+  left: var(--pause-bar-spacing);
+}
+
+#playPauseBtn.pause::after {
+  right: var(--pause-bar-spacing);
+}
+
+#playTimer {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.65rem;
+  color: #000000;
+  min-width: 70px; /* keep space for timer */
+  text-align: right;
+}
+
+.wave-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;              /* spacing between dots */
+  position: absolute;
+  width: 100%;
+  left: 0;
+  pointer-events: none;   /* so clicks pass through */
+}
+
+/* Position top dots a fixed distance above waveform */
+.top-dots {
+  top: -10px;             /* adjust spacing above waveform */
+}
+
+/* Position bottom dots a fixed distance below waveform */
+.bottom-dots {
+  bottom: -10px;           /* adjust spacing below waveform */
+}
+
+.wave-dots span {
+  display: block;
+  width: 3px;
+  height: 3px;
+  background: black;
+  border-radius: 50%;
+  opacity: 1;
+  animation: fadeDot 4s infinite alternate;
+}
+
+/* Staggered/randomized animation delay for each dot */
+.top-dots span:nth-child(1),
+.bottom-dots span:nth-child(1) { animation-delay: 0s; }
+.top-dots span:nth-child(2),
+.bottom-dots span:nth-child(2) { animation-delay: 0.3s; }
+.top-dots span:nth-child(3),
+.bottom-dots span:nth-child(3) { animation-delay: 0.7s; }
+
+@keyframes fadeDot {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.about-link {
+  position: fixed;
+  top: 20rem;
+  right: 2rem;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 2px;
+  color: #000;
+  text-decoration: none;
+  user-select: none;
+}
+
+/* ------------------------*/ 
+
+#volumeControl {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.6rem;
+}
+
+/* Base */
+#volumeBar {
+  width: 70px;
+  cursor: pointer;
+  appearance: none;
+  height: 4px;
+  background: transparent; /* Transparent so only the fill shows */
+}
+
+/* Remove the thumb entirely */
+#volumeBar::-webkit-slider-thumb {
+  appearance: none;
+  width: 0;
+  height: 0;
+}
+
+/* WebKit: create the black fill */
+#volumeBar::-webkit-slider-runnable-track {
+  height: 4px;
+  background: linear-gradient(to right, #000 0%, #000 var(--vol, 100%), transparent var(--vol, 100%));
+}
+
+/* Firefox */
+#volumeBar::-moz-range-thumb {
+  width: 0;
+  height: 0;
+  border: none;
+}
+
+/* Firefox track */
+#volumeBar::-moz-range-track {
+  height: 4px;
+  background: linear-gradient(to right, #000 0%, #000 var(--vol, 100%), transparent var(--vol, 100%));
+}
+
+/* ------------------------*/
+/* MOBILE STYLING */
+@media (max-width: 768px) {
+
+  .music-layout {
+    flex-direction: column;  /* stack sidebar and content */
+    height: auto;
+  }
+
+  .release-list {
+    width: 100%;
+    padding: 6rem 2rem 2rem 2rem; /* extra top padding so title doesn’t overlap */
+    display: flex;
+    overflow-x: auto;
+  }
+
+  .release-list ul {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .release-list li {
+    padding: 0.5rem 0.75rem;
+    flex-shrink: 0; /* prevent shrinking in horizontal scroll */
+  }
+
+  .release-display {
+    padding: 2rem 1rem;
+    margin-top: 2rem; /* prevent overlap with sidebar */
+    margin-bottom: 2rem;
+  }
+
+  .release-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .release-content img {
+    width: 90%;
+    height: auto;
+  }
+
+  .release-info h2 {
+    font-size: 1.5rem;
+  }
+
+  .tracklist {
+    font-size: 0.45rem;
+  }
+
+  #releaseTitle {
+    font-size: 0.6rem;
+  }
+
+  #releaseYear,
+  #releaseLabel {
+    font-size: 0.45rem;
+  }
+
+  #playTimer {
+    font-size: 0.55rem;
+    min-width: 50px;
+  }
+
+  #volumeControl {
+    gap: 6px;
+    font-size: 0.5rem;
+  }
+
+  .about-link {
+    top: auto;
+    bottom: 2rem;
+    right: 1rem;
+    font-size: 0.55rem;
+  }
+
+  .wave-dots {
+    gap: 4px;
+  }
+
+  .wave-dots span {
+    width: 2px;
+    height: 2px;
+  }
+
+  .release-list li::before {
+    display: none;  /* removes the black square on mobile */
+  }
+}
