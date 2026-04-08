@@ -54,11 +54,6 @@
   cursor: pointer;
 }
 
-/* Hover: scale slightly + darken */
-.design-img:hover {
-  transform: scale(1.05);
-  filter: brightness(70%);
-}
 
 /* ------------------------------
  FULLSCREEN POPUP
